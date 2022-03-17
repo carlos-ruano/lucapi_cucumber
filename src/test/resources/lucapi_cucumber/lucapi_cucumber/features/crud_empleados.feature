@@ -2,20 +2,30 @@
 #Keywords Summary :
 #Feature: List of scenarios.
 @tag
-Feature: Hacer un crud de  empleados
+Feature: Hacer un post put y delete de  empleados
   Yo como administrador quiero poder consultar un listado de empleados
 
-  @getAll
-  Scenario: Cargo la lista completa de empleados
-    Given Usuario que selecciona get a la api empleados
-    When Solicita la peticion get a empleados
-    Then Recibo un HTTP response code doscientos
-    And Devuelve un json con diez empleados
+  @put1
+  Scenario: Inserto un empleado a la lista
+    Given Usuario que selecciona POST a la api
+    And Mete en el body un JSON con los datos del empleado
+    When Solicita la peticion POST a empleados
+    Then Recibo un HTTP response code de doscientos
+    And El numero de empleados se ha modificado en mas uno
 
-  @getAll
-  Scenario: Fallo al cargar la lista de empleados porque la url esta mal
-    Given Usuario que selecciona GET a la api/empleado
-    When Solicita la peticion get a empleado sin ese final
-    Then Recibo un HTTP response code cuatrocerocuatro
-    And Devuelve un json con una bad request
+  @put1
+  Scenario: Inserto un empleado duplicado a la lista
+    Given Usuario que selecciona POST a la api con datos duplicados
+    And Mete en el body un JSON con los datos del empleado duplicado
+    When Solicita la peticion POST a empleados duplicado
+    Then Recibo un HTTP response code de cuatrocerocuatro
+    And Recibe un json vacio
+    
+  @put1
+  Scenario: Inserto un empleado a la lista con uri mal
+    Given Usuario que selecciona POST a la api con url mal
+    And Mete en el body un JSON con los datos del empleado x
+    When Solicita la peticion POST a empleado
+    Then Recibo un HTTP response code de cuatrocerocuatro por url mal
+    And Recibe json vacio
     
