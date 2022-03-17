@@ -29,3 +29,25 @@ Feature: Hacer un post put y delete de  empleados
     Then Recibo un HTTP response code de cuatrocerocuatro por url mal
     And Recibe json vacio
     
+  @delete1
+  Scenario: delete un empleado de la lista 
+    Given Usuario que selecciona delete a la api
+    When Solicita la peticion delete a empleados
+    Then Recibo un HTTP response code de dos cero cero
+    And el numero se decrementa de uno
+    
+ @delete1
+  Scenario: delete un empleado de la lista con uri mal 
+    Given Usuario que selecciona delete a la api con uri mal
+    When Solicita la peticion delete a empleados con uri mal
+    Then Recibo un HTTP response code de cuatro cero cuatro por uri mal
+    And el numero no cambia
+    
+  @delete1
+  Scenario: delete un empleado que no existe en la lista 
+    Given Usuario que selecciona delete a la api con usuario que no existe
+    When Solicita la peticion delete a empleados con que no existe
+    Then Recibo un HTTP response code de cuatro cero cuatro porque el usuario no existe
+    And el numero no se decrementa
+    
+    

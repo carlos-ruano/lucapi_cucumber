@@ -142,5 +142,87 @@ public class Crud_empleados {
 		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
 		assertThat(empleados.size()).isEqualTo(numeroEmpleados);
 	}
+	
+	// Escenario 1 delete
+	
+	@Given("Usuario que selecciona delete a la api")
+	public void usuario_que_selecciona_delete_a_la_api() {
+		RestAssured.baseURI = BASE_URL;
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		numeroEmpleados=empleados.size();
+	}
+	@When("Solicita la peticion delete a empleados")
+	public void solicita_la_peticion_delete_a_empleados() {
+		request = RestAssured.given();
+		response = request.delete("empleados/999");
+	}
+	@Then("Recibo un HTTP response code de dos cero cero")
+	public void recibo_un_http_response_code_de_dos_cero_cero() {
+		assertThat(response.getStatusCode()).isEqualTo(200);
+	}
+	@Then("el numero se decrementa de uno")
+	public void el_numero_se_decrementa_de_uno() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		assertThat(empleados.size()).isEqualTo(numeroEmpleados-1);
+	}
+	//Escenario 2 delete
+	
+	@Given("Usuario que selecciona delete a la api con uri mal")
+	public void usuario_que_selecciona_delete_a_la_api_con_uri_mal() {
+		RestAssured.baseURI = BASE_URL;
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		numeroEmpleados=empleados.size();
+	}
+	@When("Solicita la peticion delete a empleados con uri mal")
+	public void solicita_la_peticion_delete_a_empleados_con_uri_mal() {
+		request = RestAssured.given();
+		response = request.delete("empleado/999");
+	}
+	@Then("Recibo un HTTP response code de cuatro cero cuatro por uri mal")
+	public void recibo_un_http_response_code_de_cuatro_cero_cuatro_por_uri_mal() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("el numero no cambia")
+	public void el_numero_no_cambia() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		assertThat(empleados.size()).isEqualTo(numeroEmpleados);
+	}
+	
+	//Escenario 3 delete
+	
+	@Given("Usuario que selecciona delete a la api con usuario que no existe")
+	public void usuario_que_selecciona_delete_a_la_api_con_usuario_que_no_existe() {
+		RestAssured.baseURI = BASE_URL;
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		numeroEmpleados=empleados.size();
+	}
+	@When("Solicita la peticion delete a empleados con que no existe")
+	public void solicita_la_peticion_delete_a_empleados_con_que_no_existe() {
+		request = RestAssured.given();
+		response = request.delete("empleados/999");
+		
+	}
+	@Then("Recibo un HTTP response code de cuatro cero cuatro porque el usuario no existe")
+	public void recibo_un_http_response_code_de_cuatro_cero_cuatro_porque_el_usuario_no_existe() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("el numero no se decrementa")
+	public void el_numero_no_se_decrementa() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+		jsonString = RestAssured.given().get("/empleados").asString();
+		List<Map<String, String>> empleados = JsonPath.from(jsonString).get("empleados");
+		assertThat(empleados.size()).isEqualTo(numeroEmpleados);
+	}
+	
 
 }

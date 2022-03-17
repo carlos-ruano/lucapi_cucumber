@@ -3,7 +3,7 @@
 @tag
 Feature: Navegar por la web
 
-  @tag1
+  @web
   Scenario: entro en la pagina home
   
   	Given usuario que quiere entrar en la pagina home
@@ -11,7 +11,7 @@ Feature: Navegar por la web
   	Then  codigo respuesta doscientos 
   	And   Tiene el contenido las voces del cambio
   	
-	@tag2
+	@web
   Scenario: entro en la pagina contacto
   
   	Given usuario que quiere entrar en la pagina contacto
@@ -19,7 +19,7 @@ Feature: Navegar por la web
   	Then  devuelve un codigo respuesta doscientos 
   	And   Tiene el contenido Contactanos
   	
-	@tag3
+	@web
   Scenario: entro en la pagina servicios
   
   	Given usuario que quiere entrar en la pagina servicios
@@ -27,7 +27,7 @@ Feature: Navegar por la web
   	Then  devuelve  codigo respuesta doscientos 
   	And   Tiene el contenido servicios
 	
-	@tag4
+	@web
   Scenario: entro en la pagina Equipo
   
   	Given usuario que quiere entrar en la pagina equipo
