@@ -86,7 +86,7 @@ public class Navegar_web {
 	public void click_en_el_enlace_de_la_pagina_equipo() {
 		RequestSpecification request = RestAssured.given();
 		res = request.get("/equipo.html");
-		estado =res.getBody().asString().contains("<h1>Nuestro equipo</h1>");
+		estado =res.getBody().asString().contains("<h1>Equipo</h1>");
 	}
 	@Then("devuelve codigo respuesta doscientos en equipo")
 	public void devuelve_codigo_respuesta_doscientos_en_equipo() {
