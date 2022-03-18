@@ -50,4 +50,30 @@ Feature: Hacer un post put y delete de  empleados
     Then Recibo un HTTP response code de cuatro cero cuatro porque el usuario no existe
     And el numero no se decrementa
     
+  @update1
+  	Scenario: update un empleado de la lista 
+    Given Usuario que selecciona update a la api
+    And   Entra los datos a modificar 
+    When  Solicita la peticion update a empleados 
+    Then  Recibo un HTTP rescode de dos cero cero
+    Then  Recibo una respuesta con el json con el nombre cambiado
+    
+  @update1
+		Scenario: actualizo un empleado no existente la lista 
+	  Given Usuario que selecciona put a la api
+	  And   Mete en el body un json de los datos del empleado 
+	  When  Solicita la peticion put a empleados/numero 
+	  Then  Recibo un HTTP status code de cuatro cero cuatro
+	  Then  Recibo una respuesta con un json vacio
+	  
+  @update1
+		Scenario: fallo al actualizar un empleado porque el url esta mal
+	  Given Usuario que selecciona put a la api con url mal
+	  And   Mete dentro del body un json de los datos del empleado 
+	  When  Solicita la peticion put a empleado/numero 
+	  Then  Recibo un HTTP status code de cuatro cero cuatro porque el url esta mal
+	  Then  Recibo una res con un json vacio
+
+    
+  
     

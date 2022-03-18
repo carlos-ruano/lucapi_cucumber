@@ -19,6 +19,7 @@ public class Read_empleados {
 	private static final String BASE_URL = "https://prueba-fake-api-2.herokuapp.com";
 	private static Response response;
 	private static String jsonString;
+	private static RequestSpecification request;
 
 	// ESCENARIO: CARGO LA LISTA COOMPLETA DE EMPLEADOS
 
@@ -30,7 +31,7 @@ public class Read_empleados {
 
 	@When("Solicita la peticion get a empleados")
 	public void solicita_la_peticion_get_a_empleados() {
-		RequestSpecification request = RestAssured.given();
+		request = RestAssured.given();
 		response = request.get("/empleados");
 	}
 
@@ -57,7 +58,7 @@ public class Read_empleados {
 
 	@When("Solicita la peticion get a empleado sin ese final")
 	public void solicita_la_peticion_get_a_empleado_sin_ese_final() {
-		RequestSpecification request = RestAssured.given();
+		request = RestAssured.given();
 		response = request.get("/empleado");
 	}
 
@@ -82,7 +83,7 @@ public class Read_empleados {
 
 	@When("Solicita la peticion GET a empleados\\/uno")
 	public void solicita_la_peticion_get_a_empleados_uno() {
-		RequestSpecification request = RestAssured.given();
+		request = RestAssured.given();
 		response = request.get("/empleados/1");
 	}
 
@@ -108,7 +109,7 @@ public class Read_empleados {
 
 	@When("Solicita la peticion GET a empleado\\/uno")
 	public void solicita_la_peticion_get_a_empleado_uno() {
-		RequestSpecification request = RestAssured.given();
+		request = RestAssured.given();
 		response = request.get("/empleado/1");
 	}
 
@@ -131,7 +132,7 @@ public class Read_empleados {
 	}
 	@When("Solicita la peticion GET a empleados\\/cero")
 	public void solicita_la_peticion_get_a_empleados_cero() {
-		RequestSpecification request = RestAssured.given();
+		request = RestAssured.given();
 		response = request.get("/empleados/0");
 	}
 	@Then("Recibo un HTTP respcode cuatrocerocuatro")
@@ -144,5 +145,152 @@ public class Read_empleados {
 		String nombre = JsonPath.from(jsonString).get("nombre");
 		assertThat(nombre).isEqualTo(null);
 	}
-
+	
+	// Escenario 1 de peticion get con filtro(nombre)
+	
+	@Given("Usuario que selecciona get a la api con nombre como param")
+	public void usuario_que_selecciona_get_a_la_api_con_nombre_como_param() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleados\\/nombre")
+	public void solicita_la_peticion_get_a_empleados_nombre() {
+		request = RestAssured.given();
+		response = request.get("/empleados?nombre=Adrian");
+	}
+	@Then("Recibo un HTTP status code de Doscientos")
+	public void recibo_un_http_status_code_de_doscientos() {
+		assertThat(response.getStatusCode()).isEqualTo(200);
+	}
+	@Then("Devuelve un json con los datos del empleado")
+	public void devuelve_un_json_con_los_datos_del_empleado() {
+		jsonString = response.asString();
+		assertThat(jsonString.contains("Adrian")).isEqualTo(true);
+	}
+	
+	// Escenario 2 get by nombre
+	
+	@Given("Usuario que selecciona get a la api con nombre y url mal")
+	public void usuario_que_selecciona_get_a_la_api_con_nombre_y_url_mal() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleado\\/nombre")
+	public void solicita_la_peticion_get_a_empleado_nombre() {
+		request = RestAssured.given();
+		response = request.get("/empleado?nombre=Adrian");
+	}
+	@Then("Recibo un HTTP statusCode de cuatro cero cuatro")
+	public void recibo_un_http_status_code_de_cuatro_cero_cuatro() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("Devuelve un json vacio porque el url esta mal")
+	public void devuelve_un_json_vacio_porque_el_url_esta_mal() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+	}
+	
+	// Escenario 3 get by nombre
+	
+	@Given("Usuario que selecciona get a la api con nombre que no existe")
+	public void usuario_que_selecciona_get_a_la_api_con_nombre_que_no_existe() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleado\\/nombre que no existe")
+	public void solicita_la_peticion_get_a_empleado_nombre_que_no_existe() {
+		request = RestAssured.given();
+		response = request.get("/empleados?nombre=test1");
+	}
+	@Then("Recibo un HTTP statusCode de cuatro cero cuatro porque el nombre no existe")
+	public void recibo_un_http_status_code_de_cuatro_cero_cuatro_porque_el_nombre_no_existe() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("Devuelve un json vacio porque el empleado no existe")
+	public void devuelve_un_json_vacio_porque_el_empleado_no_existe() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("[]");
+	}
+	
+	// Escenario 1 filtro por ciudad
+	
+	@Given("Usuario que selecciona get a la api con ciudad")
+	public void usuario_que_selecciona_get_a_la_api_con_ciudad() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleados?ciudad")
+	public void solicita_la_peticion_get_a_empleados_ciudad() {
+		request = RestAssured.given();
+		response = request.get("/empleados?ciudad=Madrid");
+	}
+	@Then("Recibo un HTTP statusCode de dos cero cero")
+	public void recibo_un_http_status_code_de_dos_cero_cero() {
+		assertThat(response.getStatusCode()).isEqualTo(200);
+	}
+	@Then("Devuelve un json con los empleados que viven en esta ciudad")
+	public void devuelve_un_json_con_los_empleados_que_viven_en_esta_ciudad() {
+		jsonString = response.asString();
+		assertThat(jsonString.contains("Madrid")).isEqualTo(true);
+	}
+	
+	// Escenario 2 filtro por ciudad
+	
+	@Given("Usuario que selecciona get a la api con ciudad con url mal")
+	public void usuario_que_selecciona_get_a_la_api_con_ciudad_con_url_mal() {
+		RestAssured.baseURI = BASE_URL;
+		
+	}
+	@When("Solicita la peticion get a empleado?ciudad con url mal")
+	public void solicita_la_peticion_get_a_empleado_ciudad_con_url_mal() {
+		request = RestAssured.given();
+		response = request.get("/empleado?ciudad=Madrid");
+	}
+	@Then("Recibo un HTTP statusCode de cuatro cero cuatro porque url esta mal")
+	public void recibo_un_http_status_code_de_cuatro_cero_cuatro_porque_url_esta_mal() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("Devuelve json vacio porque el url esta mal")
+	public void devuelve_json_vacio_porque_el_url_esta_mal() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+	}
+	
+	// Escenario 3 filtro por ciudad
+	
+	@Given("Usuario que selecciona get a la api con ciudad que no existe")
+	public void usuario_que_selecciona_get_a_la_api_con_ciudad_que_no_existe() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleado?ciudad que no existe")
+	public void solicita_la_peticion_get_a_empleado_ciudad_que_no_existe() {
+		request = RestAssured.given();
+		response = request.get("/empleados?ciudad=Paris");
+	}
+	@Then("Recibo un HTTP statusCode de cuatro cero cuatro porque la ciudad no existe")
+	public void recibo_un_http_status_code_de_cuatro_cero_cuatro_porque_la_ciudad_no_existe() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("Devuelve un json vacio porque la ciudad no existe")
+	public void devuelve_un_json_vacio_porque_la_ciudad_no_existe() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("[]");
+	}
+	
+	// Escenario de busqueda con atributo que no existe
+	
+	@Given("Usuario que selecciona get a la api con un atributo que no existe")
+	public void usuario_que_selecciona_get_a_la_api_con_un_atributo_que_no_existe() {
+		RestAssured.baseURI = BASE_URL;
+	}
+	@When("Solicita la peticion get a empleado?atributo que no existe")
+	public void solicita_la_peticion_get_a_empleado_atributo_que_no_existe() {
+		request = RestAssured.given();
+		response = request.get("/empleados?edad=14");
+	}
+	@Then("Recibo un HTTP statusCode de cuatro cero cuatro porque el atributo no existe")
+	public void recibo_un_http_status_code_de_cuatro_cero_cuatro_porque_el_atributo_no_existe() {
+		assertThat(response.getStatusCode()).isEqualTo(404);
+	}
+	@Then("Devuelve un json vacio porque el atributo no existe")
+	public void devuelve_un_json_vacio_porque_el_atributo_no_existe() {
+		jsonString = response.asString();
+		assertThat(jsonString).isEqualTo("{}");
+	}
 }
